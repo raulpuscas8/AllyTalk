@@ -16,9 +16,11 @@ import { makeChatRequest } from "../utils/gptUtils";
 import {
   addUserMessage,
   getConversation,
-  initConversation,
+  resetConversation,
 } from "../utils/conversationHistoryUtil";
 import Bubble from "../components/Bubble";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../components/CustomHeaderButton";
 
 export default function ChatScreen(props) {
   const [messageText, setMessageText] = useState("");
@@ -26,12 +28,23 @@ export default function ChatScreen(props) {
 
   useEffect(() => {
     props.navigation.setOptions({
-      headerRight: () => <Button color="#f00" title="click me" />,
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+          <Item
+            title="Clear"
+            iconName="trash-o"
+            onPress={() => {
+              setConversation([]);
+              resetConversation();
+            }}
+          />
+        </HeaderButtons>
+      ),
     });
   }, []);
 
   useEffect(() => {
-    initConversation();
+    resetConversation();
     setConversation([]);
   }, []);
 

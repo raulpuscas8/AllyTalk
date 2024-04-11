@@ -4,7 +4,7 @@ import {
   getConversation,
 } from "./conversationHistoryUtil";
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "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",
 });
 
 export const makeChatRequest = async (messageText) => {
