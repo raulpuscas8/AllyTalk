@@ -1,4 +1,6 @@
 import {
+  Button,
+  FlatList,
   KeyboardAvoidingView,
   StyleSheet,
   Text,
@@ -16,10 +18,17 @@ import {
   getConversation,
   initConversation,
 } from "../utils/conversationHistoryUtil";
+import Bubble from "../components/Bubble";
 
-export default function ChatScreen() {
+export default function ChatScreen(props) {
   const [messageText, setMessageText] = useState("");
   const [conversation, setConversation] = useState([]);
+
+  useEffect(() => {
+    props.navigation.setOptions({
+      headerRight: () => <Button color="#f00" title="click me" />,
+    });
+  }, []);
 
   useEffect(() => {
     initConversation();
@@ -27,23 +36,39 @@ export default function ChatScreen() {
   }, []);
 
   const sendMessage = useCallback(async () => {
+    if (messageText === "") return;
+
     try {
       addUserMessage(messageText);
       setMessageText("");
-      setConversation(getConversation());
+      setConversation([...getConversation()]);
 
       await makeChatRequest();
     } catch (error) {
       console.log(error);
     } finally {
-      setConversation(getConversation());
+      setConversation([...getConversation()]);
     }
   }, [messageText]);
 
   return (
     <KeyboardAvoidingViewContainer>
       <View style={styles.container}>
-        <View style={styles.messagesContainer}></View>
+        <View style={styles.messagesContainer}>
+          <FlatList
+            style={styles.flatList}
+            data={conversation}
+            renderItem={(itemData) => {
+              const convoItem = itemData.item;
+
+              const { role, content } = convoItem;
+
+              if (role === "system") return null;
+
+              return <Bubble text={content} type={role} />;
+            }}
+          />
+        </View>
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -82,8 +107,13 @@ const styles = StyleSheet.create({
   },
   textbox: {
     flex: 1,
+    fontFamily: "regular",
   },
   messagesContainer: {
     flex: 1,
+  },
+  flatList: {
+    marginHorizontal: 15,
+    paddingVertical: 10,
   },
 });
