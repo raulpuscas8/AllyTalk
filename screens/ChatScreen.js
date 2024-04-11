@@ -9,9 +9,9 @@ import {
   View,
 } from "react-native";
 import colors from "../constants/colors";
-import { Feather } from "@expo/vector-icons";
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import KeyboardAvoidingViewContainer from "../components/KeyboardAvoidingViewContainer";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { makeChatRequest } from "../utils/gptUtils";
 import {
   addUserMessage,
@@ -23,8 +23,11 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
 
 export default function ChatScreen(props) {
+  const flatlist = useRef();
+
   const [messageText, setMessageText] = useState("");
   const [conversation, setConversation] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -52,6 +55,7 @@ export default function ChatScreen(props) {
     if (messageText === "") return;
 
     try {
+      setLoading(true);
       addUserMessage(messageText);
       setMessageText("");
       setConversation([...getConversation()]);
@@ -61,6 +65,7 @@ export default function ChatScreen(props) {
       console.log(error);
     } finally {
       setConversation([...getConversation()]);
+      setLoading(false);
     }
   }, [messageText]);
 
@@ -68,19 +73,43 @@ export default function ChatScreen(props) {
     <KeyboardAvoidingViewContainer>
       <View style={styles.container}>
         <View style={styles.messagesContainer}>
-          <FlatList
-            style={styles.flatList}
-            data={conversation}
-            renderItem={(itemData) => {
-              const convoItem = itemData.item;
+          {!loading && conversation.length === 0 && (
+            <View style={styles.emptyContainer}>
+              <FontAwesome5
+                name="lightbulb"
+                size={48}
+                color={colors.lightGrey}
+              />
+              <Text style={styles.emptyContainerText}>
+                Type a message to get started!
+              </Text>
+            </View>
+          )}
 
-              const { role, content } = convoItem;
+          {conversation.length !== 0 && (
+            <FlatList
+              ref={(ref) => (flatlist.current = ref)}
+              onLayout={() => flatlist.current.scrollToEnd()}
+              onContentSizeChange={() => flatlist.current.scrollToEnd()}
+              style={styles.flatList}
+              data={conversation}
+              renderItem={(itemData) => {
+                const convoItem = itemData.item;
 
-              if (role === "system") return null;
+                const { role, content } = convoItem;
 
-              return <Bubble text={content} type={role} />;
-            }}
-          />
+                if (role === "system") return null;
+
+                return <Bubble text={content} type={role} />;
+              }}
+            />
+          )}
+
+          {loading && (
+            <View style={styles.loadingContainer}>
+              <Bubble type="loading" />
+            </View>
+          )}
         </View>
 
         <View style={styles.inputContainer}>
@@ -128,5 +157,22 @@ const styles = StyleSheet.create({
   flatList: {
     marginHorizontal: 15,
     paddingVertical: 10,
+  },
+  loadingContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    alignItems: "center",
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  emptyContainerText: {
+    marginTop: 10,
+    color: colors.lightGrey,
+    fontSize: 18,
+    fontFamily: "regular",
   },
 });
