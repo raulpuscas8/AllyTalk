@@ -13,8 +13,8 @@ export default MainNavigator = () => {
         name="Chat"
         component={ChatScreen}
         options={{
-          tabBarIcon: () => {
-            return <Entypo name="chat" size={24} color="black" />;
+          tabBarIcon: ({ color, size }) => {
+            return <Entypo name="chat" size={size} color={color} />;
           },
         }}
       />
@@ -22,8 +22,8 @@ export default MainNavigator = () => {
         name="Image"
         component={ImageScreen}
         options={{
-          tabBarIcon: () => {
-            return <Entypo name="image" size={24} color="black" />;
+          tabBarIcon: ({ color, size }) => {
+            return <Entypo name="image" size={size} color={color} />;
           },
         }}
       />
@@ -31,8 +31,10 @@ export default MainNavigator = () => {
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarIcon: () => {
-            return <Ionicons name="settings-outline" size={24} color="black" />;
+          tabBarIcon: ({ color, size }) => {
+            return (
+              <Ionicons name="settings-outline" size={size} color={color} />
+            );
           },
         }}
       />
