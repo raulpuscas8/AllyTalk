@@ -1,6 +1,10 @@
 let conversation = [];
 
 export const getConversation = () => conversation;
+import OpenAI from "openai";
+export const openai = new OpenAI({
+  apiKey: "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",
+});
 
 export const initConversation = () => {
   addSystemMessage("You are a virtual assistant named Jeff");
