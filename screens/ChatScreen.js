@@ -21,6 +21,7 @@ import {
 import Bubble from "../components/Bubble";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
+import InputContainer from "../components/InputContainer";
 
 export default function ChatScreen(props) {
   const flatlist = useRef();
@@ -54,6 +55,8 @@ export default function ChatScreen(props) {
   const sendMessage = useCallback(async () => {
     if (messageText === "") return;
 
+    const text = messageText;
+
     try {
       setLoading(true);
       addUserMessage(messageText);
@@ -63,6 +66,7 @@ export default function ChatScreen(props) {
       await makeChatRequest();
     } catch (error) {
       console.log(error);
+      setMessageText(text);
     } finally {
       setConversation([...getConversation()]);
       setLoading(false);
@@ -112,18 +116,12 @@ export default function ChatScreen(props) {
           )}
         </View>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.textbox}
-            placeholder="Type a message..."
-            onChangeText={(text) => setMessageText(text)}
-            value={messageText}
-          />
-
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Feather name="send" size={18} color="white" />
-          </TouchableOpacity>
-        </View>
+        <InputContainer
+          onChangeText={(text) => setMessageText(text)}
+          value={messageText}
+          onPress={sendMessage}
+          placeholder="Type a message..."
+        />
       </View>
     </KeyboardAvoidingViewContainer>
   );
@@ -133,23 +131,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.greyBg,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    padding: 10,
-  },
-  sendButton: {
-    backgroundColor: colors.primary,
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-  textbox: {
-    flex: 1,
-    fontFamily: "regular",
   },
   messagesContainer: {
     flex: 1,

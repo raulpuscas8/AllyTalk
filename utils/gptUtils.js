@@ -4,8 +4,22 @@ import {
   getConversation,
 } from "./conversationHistoryUtil";
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "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",
 });
+
+export const makeImageRequest = async (prompt) => {
+  const response = await openai.images.generate({
+    model: "dall-e-2",
+    prompt,
+    n: 1,
+    size: "256x256",
+  });
+
+  if (response.data) {
+    return response.data;
+  }
+  throw new Error("Response is in an unsupported format");
+};
 
 export const makeChatRequest = async (messageText) => {
   const response = await openai.chat.completions.create({
