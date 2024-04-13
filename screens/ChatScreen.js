@@ -22,9 +22,12 @@ import Bubble from "../components/Bubble";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
 import InputContainer from "../components/InputContainer";
+import { useSelector } from "react-redux";
 
 export default function ChatScreen(props) {
   const flatlist = useRef();
+
+  const personality = useSelector((state) => state.settings.personality);
 
   const [messageText, setMessageText] = useState("");
   const [conversation, setConversation] = useState([]);
@@ -48,9 +51,9 @@ export default function ChatScreen(props) {
   }, []);
 
   useEffect(() => {
-    resetConversation();
+    resetConversation(personality);
     setConversation([]);
-  }, []);
+  }, [personality]);
 
   const sendMessage = useCallback(async () => {
     if (messageText === "") return;
