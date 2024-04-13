@@ -1,12 +1,18 @@
 import "react-native-gesture-handler";
 import "react-native-url-polyfill/auto";
-import { StyleSheet, View } from "react-native";
+import { LogBox, StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import MainNavigator from "./components/MainNavigator";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,13 +49,15 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>
-        <HeaderButtonsProvider stackType="js">
-          <MainNavigator />
-        </HeaderButtonsProvider>
-      </NavigationContainer>
-    </View>
+    <Provider store={store}>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <NavigationContainer>
+          <HeaderButtonsProvider stackType="js">
+            <MainNavigator />
+          </HeaderButtonsProvider>
+        </NavigationContainer>
+      </View>
+    </Provider>
   );
 }
 

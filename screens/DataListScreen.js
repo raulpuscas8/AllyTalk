@@ -3,7 +3,7 @@ import DataItem from "../components/DataItem";
 import { useEffect } from "react";
 
 export default DataListScreen = (props) => {
-  const { data, title } = props.route.params;
+  const { data, title, onPress, selectedValue } = props.route.params;
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -17,7 +17,14 @@ export default DataListScreen = (props) => {
         data={data}
         renderItem={(itemData) => {
           const item = itemData.item;
-          return <DataItem title={item} />;
+          return (
+            <DataItem
+              title={item}
+              onPress={() => onPress(item)}
+              type="checkbox"
+              isChecked={item === selectedValue}
+            />
+          );
         }}
       />
     </View>
