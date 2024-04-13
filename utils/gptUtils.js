@@ -4,7 +4,7 @@ import {
   getConversation,
 } from "./conversationHistoryUtil";
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "",
 });
 
 export const makeImageRequest = async (prompt) => {

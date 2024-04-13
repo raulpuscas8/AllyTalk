@@ -4,6 +4,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import ImageScreen from "../screens/ImageScreen";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import colors from "../constants/colors";
+import SettingsNavigator from "./SettingsNavigator";
 
 const options = {
   headerTitleStyle: {
@@ -44,9 +45,10 @@ export default MainNavigator = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsNavigator}
         options={{
           ...options,
+          headerShown: false,
           tabBarIcon: ({ color, size }) => {
             return (
               <Ionicons name="settings-outline" size={size} color={color} />
