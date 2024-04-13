@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+import StartUpScreen from "./screens/StartUpScreen";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -53,7 +54,7 @@ export default function App() {
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <NavigationContainer>
           <HeaderButtonsProvider stackType="js">
-            <MainNavigator />
+            <StartUpScreen />
           </HeaderButtonsProvider>
         </NavigationContainer>
       </View>

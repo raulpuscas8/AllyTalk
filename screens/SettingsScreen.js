@@ -5,6 +5,7 @@ import DataItem from "../components/DataItem";
 import { personalities } from "../constants/settings";
 import { useSelector, useDispatch } from "react-redux";
 import { setItem } from "../store/settingsSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SettingsScreen(props) {
   const dispatch = useDispatch();
@@ -17,8 +18,9 @@ export default function SettingsScreen(props) {
     });
   }, []);
 
-  const updateValue = useCallback((key, value) => {
+  const updateValue = useCallback(async (key, value) => {
     try {
+      await AsyncStorage.setItem(key, value);
       dispatch(setItem({ key, value }));
       props.navigation.goBack();
     } catch (error) {
