@@ -39,26 +39,54 @@ export default function SettingsScreen(props) {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={appSettings}
-        renderItem={(itemData) => {
-          const settingData = itemData.item;
+      <DataItem
+        title="Personality"
+        subTitle={personality}
+        type="link"
+        onPress={() => {
+          props.navigation.navigate("DataListScreen", {
+            data: personalities,
+            title: "Personalities",
+            onPress: (value) => updateValue("personality", value),
+            selectedValue: personality,
+          });
+        }}
+      />
 
-          return (
-            <DataItem
-              title={settingData.title}
-              subTitle={allSettings[settingData.id]}
-              type="link"
-              onPress={() => {
-                props.navigation.navigate("DataListScreen", {
-                  data: settingData.data,
-                  title: settingData.title,
-                  onPress: (value) => updateValue(settingData.id, value),
-                  selectedValue: allSettings[settingData.id],
-                });
-              }}
-            />
-          );
+      <DataItem
+        title="Mood"
+        subTitle={mood}
+        type="link"
+        onPress={() => {
+          props.navigation.navigate("DataListScreen", {
+            data: moods,
+            title: "Moods",
+            onPress: (value) => updateValue("mood", value),
+            selectedValue: mood,
+          });
+        }}
+      />
+
+      <DataItem
+        title="Response size"
+        subTitle={responseSize}
+        type="link"
+        onPress={() => {
+          props.navigation.navigate("DataListScreen", {
+            data: responseSizes,
+            title: "Response size",
+            onPress: (value) => updateValue("responseSize", value),
+            selectedValue: responseSize,
+          });
+        }}
+      />
+
+      <DataItem
+        title="Advanced settings"
+        subTitle="Additional model settings"
+        type="link"
+        onPress={() => {
+          props.navigation.navigate("AdvancedSettingsScreen");
         }}
       />
     </View>
