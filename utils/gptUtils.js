@@ -32,12 +32,10 @@ export const makeChatRequest = async (messageText) => {
     presence_penalty: 0,
   });
 
-  //   printUsage(response.data.usage)
   if (response.choices) {
     let responseText = response.choices[0].message.content;
     responseText = responseText.replace(/(\r\n|\n|\r)/gm, "");
     addAssistantMessage(responseText);
-    // console.log(response.choices[0].message);
     console.log(getConversation());
     return;
   }
