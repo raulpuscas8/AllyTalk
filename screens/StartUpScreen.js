@@ -14,12 +14,14 @@ export default StartUpScreen = () => {
   useEffect(() => {
     const getSettings = async () => {
       try {
-        const personality = await AsyncStorage.getItem("personality");
-        personality &&
-          dispatch(setItem({ key: "personality", value: personality }));
+        const keys = ["personality", "mood", "responseSize"];
 
-        const mood = await AsyncStorage.getItem("mood");
-        mood && dispatch(setItem({ key: "mood", value: mood }));
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i];
+
+          const value = await AsyncStorage.getItem(key);
+          value && dispatch(setItem({ key, value }));
+        }
       } catch (error) {
         console.log(error);
       } finally {

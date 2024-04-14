@@ -1,8 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import DataItem from "../components/DataItem";
-import { moods, personalities } from "../constants/settings";
+import {
+  appSettings,
+  moods,
+  personalities,
+  responseSizes,
+} from "../constants/settings";
 import { useSelector, useDispatch } from "react-redux";
 import { setItem } from "../store/settingsSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -12,6 +17,9 @@ export default function SettingsScreen(props) {
 
   const personality = useSelector((state) => state.settings.personality);
   const mood = useSelector((state) => state.settings.mood);
+  const responseSize = useSelector((state) => state.settings.responseSize);
+
+  const allSettings = useSelector((state) => state.settings);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -31,40 +39,26 @@ export default function SettingsScreen(props) {
 
   return (
     <View style={styles.container}>
-      <DataItem
-        title="Personality"
-        subTitle={personality}
-        type="link"
-        onPress={() => {
-          props.navigation.navigate("DataListScreen", {
-            data: personalities,
-            title: "Personalities",
-            onPress: (value) => updateValue("personality", value),
-            selectedValue: personality,
-          });
-        }}
-      />
+      <FlatList
+        data={appSettings}
+        renderItem={(itemData) => {
+          const settingData = itemData.item;
 
-      <DataItem
-        title="Mood"
-        subTitle={mood}
-        type="link"
-        onPress={() => {
-          props.navigation.navigate("DataListScreen", {
-            data: moods,
-            title: "Moods",
-            onPress: (value) => updateValue("mood", value),
-            selectedValue: mood,
-          });
-        }}
-      />
-
-      <DataItem
-        title="Model"
-        subTitle="Change the GPT model"
-        type="link"
-        onPress={() => {
-          console.log("Pressed");
+          return (
+            <DataItem
+              title={settingData.title}
+              subTitle={allSettings[settingData.id]}
+              type="link"
+              onPress={() => {
+                props.navigation.navigate("DataListScreen", {
+                  data: settingData.data,
+                  title: settingData.title,
+                  onPress: (value) => updateValue(settingData.id, value),
+                  selectedValue: allSettings[settingData.id],
+                });
+              }}
+            />
+          );
         }}
       />
     </View>

@@ -29,6 +29,7 @@ export default function ChatScreen(props) {
 
   const personality = useSelector((state) => state.settings.personality);
   const mood = useSelector((state) => state.settings.mood);
+  const responseSize = useSelector((state) => state.settings.responseSize);
 
   const [messageText, setMessageText] = useState("");
   const [conversation, setConversation] = useState([]);
@@ -43,18 +44,18 @@ export default function ChatScreen(props) {
             iconName="trash-o"
             onPress={() => {
               setConversation([]);
-              resetConversation(personality, mood);
+              resetConversation(personality, mood, responseSize);
             }}
           />
         </HeaderButtons>
       ),
     });
-  }, [personality, mood]);
+  }, [personality, mood, responseSize]);
 
   useEffect(() => {
-    resetConversation(personality, mood);
+    resetConversation(personality, mood, responseSize);
     setConversation([]);
-  }, [personality, mood]);
+  }, [personality, mood, responseSize]);
 
   const sendMessage = useCallback(async () => {
     if (messageText === "") return;

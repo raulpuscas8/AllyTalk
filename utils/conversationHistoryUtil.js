@@ -2,7 +2,7 @@ let conversation = [];
 
 export const getConversation = () => conversation;
 
-export const initConversation = (personality, mood) => {
+export const initConversation = (personality, mood, responseSize) => {
   let messageString = "You are a virtual assistant named Tzakalie. ";
 
   if (personality !== "normal") {
@@ -11,6 +11,10 @@ export const initConversation = (personality, mood) => {
 
   if (mood !== "normal") {
     messageString += `Your mood is: ${mood}. `;
+  }
+
+  if (responseSize !== "medium") {
+    messageString += `Response size: ${responseSize}. `;
   }
 
   addSystemMessage(messageString);
@@ -37,7 +41,7 @@ export const addSystemMessage = (messageText) => {
   });
 };
 
-export const resetConversation = (personality, mood) => {
+export const resetConversation = (personality, mood, responseSize) => {
   conversation = [];
-  initConversation(personality, mood);
+  initConversation(personality, mood, responseSize);
 };
