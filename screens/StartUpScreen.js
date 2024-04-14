@@ -17,6 +17,9 @@ export default StartUpScreen = () => {
         const personality = await AsyncStorage.getItem("personality");
         personality &&
           dispatch(setItem({ key: "personality", value: personality }));
+
+        const mood = await AsyncStorage.getItem("mood");
+        mood && dispatch(setItem({ key: "mood", value: mood }));
       } catch (error) {
         console.log(error);
       } finally {

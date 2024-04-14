@@ -8,3 +8,5 @@ export const personalities = [
   "caveman",
   "oltean",
 ];
+
+export const moods = ["normal", "excited", "sad", "angry"];
