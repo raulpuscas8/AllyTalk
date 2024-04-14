@@ -4,7 +4,8 @@ import colors from "../constants/colors";
 import MainNavigator from "../components/MainNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { setItem } from "../store/settingsSlice";
+import { setAdvancedItem, setItem } from "../store/settingsSlice";
+import { advancedSettings } from "../constants/settings";
 
 export default StartUpScreen = () => {
   const dispatch = useDispatch();
@@ -14,13 +15,24 @@ export default StartUpScreen = () => {
   useEffect(() => {
     const getSettings = async () => {
       try {
-        const keys = ["personality", "mood", "responseSize"];
+        const personality = await AsyncStorage.getItem("personality");
+        personality &&
+          dispatch(setItem({ key: "personality", value: personality }));
 
-        for (let i = 0; i < keys.length; i++) {
-          const key = keys[i];
+        const mood = await AsyncStorage.getItem("mood");
+        mood && dispatch(setItem({ key: "mood", value: mood }));
 
-          const value = await AsyncStorage.getItem(key);
-          value && dispatch(setItem({ key, value }));
+        const responseSize = await AsyncStorage.getItem("responseSize");
+        responseSize &&
+          dispatch(setItem({ key: "responseSize", value: responseSize }));
+
+        for (let i = 0; i < advancedSettings.length; i++) {
+          const optionData = advancedSettings[i];
+
+          const id = optionData.id;
+
+          const value = await AsyncStorage.getItem(id);
+          value !== null && dispatch(setAdvancedItem({ key: id, value }));
         }
       } catch (error) {
         console.log(error);

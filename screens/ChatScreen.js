@@ -11,7 +11,7 @@ import {
 import colors from "../constants/colors";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import KeyboardAvoidingViewContainer from "../components/KeyboardAvoidingViewContainer";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { makeChatRequest } from "../utils/gptUtils";
 import {
   addUserMessage,
@@ -23,6 +23,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
 import InputContainer from "../components/InputContainer";
 import { useSelector } from "react-redux";
+import { advancedSettings } from "../constants/settings";
 
 export default function ChatScreen(props) {
   const flatlist = useRef();
@@ -30,10 +31,35 @@ export default function ChatScreen(props) {
   const personality = useSelector((state) => state.settings.personality);
   const mood = useSelector((state) => state.settings.mood);
   const responseSize = useSelector((state) => state.settings.responseSize);
+  const settings = useSelector((state) => state.settings.advanced);
 
   const [messageText, setMessageText] = useState("");
   const [conversation, setConversation] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const chatOptions = useMemo(() => {
+    const options = {};
+
+    for (let i = 0; i < advancedSettings.length; i++) {
+      const settingsData = advancedSettings[i];
+      const id = settingsData.id;
+
+      let value = settings[id];
+      if (!value) {
+        continue;
+      }
+
+      if (settingsData.type === "number") {
+        value = parseFloat(value);
+      } else if (settingsData.type === "integer") {
+        value = parseInt(value);
+      }
+
+      options[id] = value;
+    }
+
+    return options;
+  }, [advancedSettings, settings]);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -68,7 +94,7 @@ export default function ChatScreen(props) {
       setMessageText("");
       setConversation([...getConversation()]);
 
-      await makeChatRequest();
+      await makeChatRequest(chatOptions);
     } catch (error) {
       console.log(error);
       setMessageText(text);
@@ -76,7 +102,7 @@ export default function ChatScreen(props) {
       setConversation([...getConversation()]);
       setLoading(false);
     }
-  }, [messageText]);
+  }, [messageText, chatOptions]);
 
   return (
     <KeyboardAvoidingViewContainer>
