@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import DataItem from "../components/DataItem";
-import { personalities } from "../constants/settings";
+import { moods, personalities } from "../constants/settings";
 import { useSelector, useDispatch } from "react-redux";
 import { setItem } from "../store/settingsSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,6 +11,7 @@ export default function SettingsScreen(props) {
   const dispatch = useDispatch();
 
   const personality = useSelector((state) => state.settings.personality);
+  const mood = useSelector((state) => state.settings.mood);
 
   useEffect(() => {
     props.navigation.setOptions({
@@ -46,10 +47,15 @@ export default function SettingsScreen(props) {
 
       <DataItem
         title="Mood"
-        subTitle="Change the mood of the model"
+        subTitle={mood}
         type="link"
         onPress={() => {
-          console.log("Pressed");
+          props.navigation.navigate("DataListScreen", {
+            data: moods,
+            title: "Moods",
+            onPress: (value) => updateValue("mood", value),
+            selectedValue: mood,
+          });
         }}
       />
 
